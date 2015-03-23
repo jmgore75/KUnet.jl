@@ -1,5 +1,5 @@
 module KUnet
-const libkunet = find_library(["libkunet"], [Pkg.dir("KUnet/cuda")])
+const libkunet = find_library(["libkunet.so"], [Pkg.dir("KUnet/cuda")])
 
 using Compat
 using InplaceOps
