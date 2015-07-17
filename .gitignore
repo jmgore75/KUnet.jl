@@ -8,6 +8,7 @@
 test1
 test2
 *.so
+*.dylib
 *.o
 foo*
 unused

@@ -1,12 +1,19 @@
-CFLAGS=-g -L.
+UNAME := $(shell uname)
+ifeq ($(UNAME),Darwin)
+	EXT := dylib
+else
+	EXT := so
+endif
 
-all: libkunet.so libkunet_h5.so
+CFLAGS=-L.
 
-libkunet.so: kunet.o
-	nvcc $(CFLAGS) --shared --compiler-options -fPIC $^ -lcublas -lcurand -o $@
+all: libkunet libkunet_h5
 
-libkunet_h5.so: kunet_h5.o
-	nvcc $(CFLAGS) --shared --compiler-options -fPIC $^ -lhdf5 -lhdf5_hl -o $@
+libkunet: kunet.o
+	nvcc $(CFLAGS) --shared --compiler-options -fPIC $^ -lcublas -lcurand -o $@.$(EXT)
+
+libkunet_h5: kunet_h5.o
+	nvcc $(CFLAGS) --shared --compiler-options -fPIC $^ -lhdf5 -lhdf5_hl -o $@.$(EXT)
 
 kunet.o: kunet.cu kunet.h
 
@@ -16,4 +23,4 @@ kunet_h5.o: kunet_h5.cu kunet_h5.h kunet.h
 	nvcc -c $(CFLAGS) --compiler-options -fPIC $< -o $@
 
 clean:
-	-rm *.o *.so
+	-rm *.o *.$(EXT)
